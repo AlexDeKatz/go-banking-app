@@ -9,6 +9,8 @@ import (
 
 type Config struct {
 	DatabaseURI string
+	ServerPort  string
+	ServerHost  string
 }
 
 var dbURI string
@@ -19,11 +21,13 @@ func init() {
 	if err != nil {
 		logging.Error("Error loading .env file")
 	}
-	dbURI = os.Getenv("AIVEN_DB_URI")
+	dbURI = os.Getenv("DB_URI")
 
 }
 func GetConfig() *Config {
 	return &Config{
 		DatabaseURI: dbURI,
+		ServerPort:  os.Getenv("SERVER_PORT"),
+		ServerHost:  os.Getenv("SERVER_HOST"),
 	}
 }
