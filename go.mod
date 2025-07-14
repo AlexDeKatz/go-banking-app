@@ -9,6 +9,7 @@ require (
 
 require (
 	github.com/jmoiron/sqlx v1.4.0 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
 )
 
