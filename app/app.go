@@ -1,16 +1,31 @@
 package app
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/AlexDeKatz/banking/config"
 	"github.com/AlexDeKatz/banking/domain"
 	"github.com/AlexDeKatz/banking/service"
 	"github.com/gorilla/mux"
 )
 
-func Start() {
+func sanityCheck() {
+	config := config.GetConfig()
+	if config.DatabaseURI == "" {
+		log.Fatal("Database URI is not set in the environment variables")
+	}
+	if config.ServerPort == "" {
+		log.Fatal("Server port is not set in the environment variables")
+	}
+	if config.ServerHost == "" {
+		log.Fatal("Server host is not set in the environment variables")
+	}
+}
 
+func Start() {
+	sanityCheck()
 	router := mux.NewRouter()
 
 	ch := &CustomerHandler{
@@ -22,7 +37,9 @@ func Start() {
 
 	router.HandleFunc("/customers/{customer_id:[0-9]+}", ch.getCustomerById).Methods(http.MethodGet)
 
-	error := http.ListenAndServe(":8080", router)
+	config := config.GetConfig()
+
+	error := http.ListenAndServe(fmt.Sprintf("%s:%s", config.ServerHost, config.ServerPort), router)
 
 	if error != nil {
 		log.Fatal(error)
