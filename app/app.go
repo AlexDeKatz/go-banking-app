@@ -49,6 +49,8 @@ func Start() {
 
 	router.HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.createAccount).Methods(http.MethodPost)
 
+	router.HandleFunc("/customers/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", ah.makeTransaction).Methods(http.MethodPost)
+
 	config := config.GetConfig()
 
 	error := http.ListenAndServe(fmt.Sprintf("%s:%s", config.ServerHost, config.ServerPort), router)
