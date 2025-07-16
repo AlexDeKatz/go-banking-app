@@ -6,16 +6,22 @@ import (
 )
 
 type Account struct {
-	AccountID   string  `json:"account_id"`
-	CustomerID  string  `json:"customer_id"`
-	OpeningDate string  `json:"opening_date"`
-	AccountType string  `json:"account_type"`
-	Amount      float64 `json:"amount"`
-	Status      string  `json:"status"`
+	AccountID   string  `db:"account_id"`
+	CustomerID  string  `db:"customer_id"`
+	OpeningDate string  `db:"opening_date"`
+	AccountType string  `db:"account_type"`
+	Amount      float64 `db:"amount"`
+	Status      string  `db:"status"`
 }
 
 type AccountRepository interface {
 	Save(account Account) (*Account, *errors.AppError)
+	SaveTransaction(transaction Transaction) (*Transaction, *errors.AppError)
+	FindById(accountId string) (*Account, *errors.AppError)
+}
+
+func (a *Account) CanWithdraw(amount float64) bool {
+	return a.Amount > amount
 }
 
 func (a *Account) ToNewAccountResponseDTO() *dto.NewAccountResponse {
